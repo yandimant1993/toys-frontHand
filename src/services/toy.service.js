@@ -15,10 +15,22 @@ export const toyService = {
     save,
     remove,
     getEmptyToys,
+    getDefaultFilter
 }
 
-function query() {
+function query(filterBy = {}) {
     return storageService.query(STORAGE_KEY)
+    // .then(toys => {
+    //     if (!filterBy.txt) filterBy.txt = ''
+    //     if (!filterBy.maxPrice) filterBy.maxPrice = Infinity
+    //     if (!filterBy.minSpeed) filterBy.minSpeed = -Infinity
+    //     const regExp = new RegExp(filterBy.txt, 'i')
+    //     return toys.filter(toy =>
+    //         regExp.test(toy.vendor) &&
+    //         toy.price <= filterBy.maxPrice &&
+    //         toy.speed >= filterBy.minSpeed
+    //     )
+    // })
 }
 
 function getById(toysId) {
@@ -56,7 +68,7 @@ function _createToys() {
     const toys = utilService.loadFromStorage(STORAGE_KEY) || []
     if (toys.length > 0) return
 
-   let toysArr = [
+    let toysArr = [
         {
             _id: 't101',
             name: 'Talking Doll',
@@ -152,6 +164,10 @@ function _createToys() {
     // for (var i = 0; i < 4; i++) {
     //     const toys = _createToy()
     storageService.post(STORAGE_KEY, toysArr)
+}
+
+function getDefaultFilter() {
+    return { txt: '', maxPrice: '', minSpeed: '' }
 }
 
 
