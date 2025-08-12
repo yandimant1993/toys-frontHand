@@ -15,7 +15,8 @@ export const toyService = {
     save,
     remove,
     getEmptyToys,
-    getDefaultFilter
+    getDefaultFilter,
+    getRandomToy
 }
 
 function query(filterBy = {}) {
@@ -46,7 +47,7 @@ function save(toys) {
         return storageService.put(STORAGE_KEY, toys)
     } else {
         // when switching to backend - remove the next line
-        toys.owner = userService.getLoggedinUser()
+        // toys.owner = userService.getLoggedinUser()
         return storageService.post(STORAGE_KEY, toys)
     }
 }
@@ -178,4 +179,18 @@ function getDefaultFilter() {
 //     return toys
 // }
 
+function getRandomToy() {
+    const randomNames = ['Teddy Bear', 'Race Car', 'Building Blocks', 'Doll House', 'Puzzle', 'Art Set', 'Outdoor Swing', 'Robot Toy']
+    const randomLabels = labels.slice(0, Math.floor(Math.random() * 4) + 1)
+
+    return {
+        _id: utilService.makeId(),
+        name: randomNames[Math.floor(Math.random() * randomNames.length)],
+        imgUrl: 'https://example.com/img/random-toy.jpg',
+        price: utilService.getRandomIntInclusive(10, 200),
+        labels: randomLabels,
+        createdAt: Date.now(),
+        inStock: Math.random() > 0.3
+    }
+}
 

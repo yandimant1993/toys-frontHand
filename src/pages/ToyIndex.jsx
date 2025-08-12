@@ -61,11 +61,11 @@ export function ToyIndex() {
             })
     }
 
-    function addToToy(toy) {
-        console.log(`Adding ${toy.name} to Toy`)
-        dispatch({ type: ADD_TOY_TO_TOY, toy })
-        showSuccessMsg('Added to Toy')
-    }
+    // function addToToy(toy) {
+    //     console.log(`Adding ${toy.name} to Toy`)
+    //     dispatch({ type: ADD_TOY_TO_TO, toy })
+    //     showSuccessMsg('Added to Toy')
+    // }
 
     return (
         <div>
@@ -79,7 +79,7 @@ export function ToyIndex() {
                         toys={toys}
                         onRemoveToy={onRemoveToy}
                         onEditToy={onEditToy}
-                        addToToy={addToToy}
+                        // addToToy={addToToy}
                     />
                     : <div>Loading...</div>
                 }
