@@ -6,7 +6,6 @@
 import { useEffect, useRef, useState } from "react"
 import { utilService } from "../services/util.service"
 
-
 export function ToyFilter({ filterBy, onSetFilter }) {
 
     const [filterByToEdit, setFilterByToEdit] = useState({ ...filterBy })
@@ -22,29 +21,52 @@ export function ToyFilter({ filterBy, onSetFilter }) {
         setFilterByToEdit((prevFilter) => ({ ...prevFilter, [field]: value }))
     }
 
+    function clearFilter() {
+        const emptyFilter = { txt: '', maxPrice: '', inStock: '' }
+        setFilterByToEdit(emptyFilter)
+        onSetFilter(emptyFilter)
+    }
+
     return (
-        <section className="toy-filter full main-layout">
-            <h2>Toys Filter</h2>
-            <form >
-                <label htmlFor="name">name:</label>
-                <input type="text"
+        <section className="toy-filter">
+            <h3 className="filter-title">🔍 Filter Toys</h3>
+            <div className="filter-inputs">
+                <input 
+                    type="text"
                     id="name"
                     name="txt"
-                    placeholder="By name"
+                    placeholder="Search by name..."
                     value={filterByToEdit.txt}
                     onChange={handleChange}
+                    className="filter-input"
                 />
 
-                <label htmlFor="maxPrice">in stock:</label>
-                <input type="number"
-                    id="in stock"
-                    name="in stock"
-                    placeholder="By in stoc"
-                    value={filterByToEdit.inStock || undefined}
+                <input 
+                    type="number"
+                    id="maxPrice"
+                    name="maxPrice"
+                    placeholder="Max price..."
+                    value={filterByToEdit.maxPrice || ''}
                     onChange={handleChange}
+                    className="filter-input"
                 />
-            </form>
 
+                <select
+                    id="inStock"
+                    name="inStock"
+                    value={filterByToEdit.inStock || ''}
+                    onChange={handleChange}
+                    className="filter-select"
+                >
+                    <option value="">All items</option>
+                    <option value="true">In Stock</option>
+                    <option value="false">Out of Stock</option>
+                </select>
+
+                <button onClick={clearFilter} style={{ padding: '10px 15px', background: '#ff6b6b', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>
+                    🗑️ Clear Filter
+                </button>
+            </div>
         </section>
     )
 }

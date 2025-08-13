@@ -21,17 +21,32 @@ export const toyService = {
 
 function query(filterBy = {}) {
     return storageService.query(STORAGE_KEY)
-    // .then(toys => {
-    //     if (!filterBy.txt) filterBy.txt = ''
-    //     if (!filterBy.maxPrice) filterBy.maxPrice = Infinity
-    //     if (!filterBy.minSpeed) filterBy.minSpeed = -Infinity
-    //     const regExp = new RegExp(filterBy.txt, 'i')
-    //     return toys.filter(toy =>
-    //         regExp.test(toy.vendor) &&
-    //         toy.price <= filterBy.maxPrice &&
-    //         toy.speed >= filterBy.minSpeed
-    //     )
-    // })
+    .then(toys => {
+        if (!filterBy.txt) filterBy.txt = ''
+        if (!filterBy.maxPrice) filterBy.maxPrice = Infinity
+        if (!filterBy.inStock) filterBy.inStock = ''
+        
+        let filteredToys = toys
+        
+        // Filter by text (name)
+        if (filterBy.txt) {
+            const regExp = new RegExp(filterBy.txt, 'i')
+            filteredToys = filteredToys.filter(toy => regExp.test(toy.name))
+        }
+        
+        // Filter by max price
+        if (filterBy.maxPrice && filterBy.maxPrice !== '') {
+            filteredToys = filteredToys.filter(toy => toy.price <= filterBy.maxPrice)
+        }
+        
+        // Filter by stock status
+        if (filterBy.inStock && filterBy.inStock !== '') {
+            const inStock = filterBy.inStock === 'true'
+            filteredToys = filteredToys.filter(toy => toy.inStock === inStock)
+        }
+        
+        return filteredToys
+    })
 }
 
 function getById(toysId) {
@@ -73,7 +88,7 @@ function _createToys() {
         {
             _id: 't101',
             name: 'Talking Doll',
-            imgUrl: 'https://example.com/img/talking-doll.jpg',
+            imgUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
             price: 123,
             labels: ['Doll', 'Battery Powered', 'Baby'],
             createdAt: 1631031801011,
@@ -82,7 +97,7 @@ function _createToys() {
         {
             _id: 't102',
             name: 'Race Toys',
-            imgUrl: 'https://example.com/img/race-toys.jpg',
+            imgUrl: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=400&h=300&fit=crop',
             price: 89,
             labels: ['On wheels', 'Battery Powered'],
             createdAt: 1642031801011,
@@ -91,7 +106,7 @@ function _createToys() {
         {
             _id: 't103',
             name: 'Wooden Puzzle',
-            imgUrl: 'https://example.com/img/wooden-puzzle.jpg',
+            imgUrl: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=300&fit=crop',
             price: 45,
             labels: ['Puzzle', 'Box game', 'Art'],
             createdAt: 1620031801011,
@@ -100,7 +115,7 @@ function _createToys() {
         {
             _id: 't104',
             name: 'Building Blocks',
-            imgUrl: 'https://example.com/img/building-blocks.jpg',
+            imgUrl: 'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400&h=300&fit=crop',
             price: 59,
             labels: ['Box game', 'Baby'],
             createdAt: 1655031801011,
@@ -109,7 +124,7 @@ function _createToys() {
         {
             _id: 't105',
             name: 'Outdoor Swing',
-            imgUrl: 'https://example.com/img/outdoor-swing.jpg',
+            imgUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop',
             price: 199,
             labels: ['Outdoor', 'Baby'],
             createdAt: 1666031801011,
@@ -118,7 +133,7 @@ function _createToys() {
         {
             _id: 't106',
             name: 'Paint Set',
-            imgUrl: 'https://example.com/img/paint-set.jpg',
+            imgUrl: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&h=300&fit=crop',
             price: 39,
             labels: ['Art'],
             createdAt: 1638031801011,
@@ -127,7 +142,7 @@ function _createToys() {
         {
             _id: 't107',
             name: 'Robot Dog',
-            imgUrl: 'https://example.com/img/robot-dog.jpg',
+            imgUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=300&fit=crop',
             price: 149,
             labels: ['Battery Powered', 'Doll'],
             createdAt: 1659031801011,
@@ -136,7 +151,7 @@ function _createToys() {
         {
             _id: 't108',
             name: 'Mini Skateboard',
-            imgUrl: 'https://example.com/img/mini-skateboard.jpg',
+            imgUrl: 'https://images.unsplash.com/photo-1572776685600-c8c22e9c8c5a?w=400&h=300&fit=crop',
             price: 75,
             labels: ['On wheels', 'Outdoor'],
             createdAt: 1612031801011,
@@ -145,7 +160,7 @@ function _createToys() {
         {
             _id: 't109',
             name: 'Puzzle Cube',
-            imgUrl: 'https://example.com/img/puzzle-cube.jpg',
+            imgUrl: 'https://images.unsplash.com/photo-1589561253898-768105ca91a8?w=400&h=300&fit=crop',
             price: 29,
             labels: ['Puzzle', 'Box game'],
             createdAt: 1648031801011,
@@ -154,7 +169,7 @@ function _createToys() {
         {
             _id: 't110',
             name: 'Stuffed Bear',
-            imgUrl: 'https://example.com/img/stuffed-bear.jpg',
+            imgUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
             price: 54,
             labels: ['Baby', 'Doll'],
             createdAt: 1609031801011,
@@ -162,31 +177,22 @@ function _createToys() {
         }
     ]
 
-    // for (var i = 0; i < 4; i++) {
-    //     const toys = _createToy()
-    storageService.post(STORAGE_KEY, toysArr)
+    utilService.saveToStorage(STORAGE_KEY, toysArr)
 }
 
 function getDefaultFilter() {
-    return { txt: '', maxPrice: '', minSpeed: '' }
+    return { txt: '', maxPrice: '', inStock: '' }
 }
 
-
-// function _createToy() {
-//     const toys = getEmptyToys()
-//     toys._id = utilService.makeId()
-
-//     return toys
-// }
 
 function getRandomToy() {
     const randomNames = ['Teddy Bear', 'Race Car', 'Building Blocks', 'Doll House', 'Puzzle', 'Art Set', 'Outdoor Swing', 'Robot Toy']
     const randomLabels = labels.slice(0, Math.floor(Math.random() * 4) + 1)
 
     return {
-        _id: utilService.makeId(),
+        _id: '',
         name: randomNames[Math.floor(Math.random() * randomNames.length)],
-        imgUrl: 'https://example.com/img/random-toy.jpg',
+        imgUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=150&h=150&fit=crop', // teddy bear
         price: utilService.getRandomIntInclusive(10, 200),
         labels: randomLabels,
         createdAt: Date.now(),

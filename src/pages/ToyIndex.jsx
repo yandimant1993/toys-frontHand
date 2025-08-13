@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import { ToyFilter } from '../cmp/ToyFilter.jsx'
 import { ToyList } from '../cmp/ToyList.jsx'
@@ -11,9 +11,9 @@ import { loadToys, removeToy, saveToy, setFilterBy } from '../store/actions/toy.
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js";
 
 export function ToyIndex() {
-    const dispatch = useDispatch()
+
     const toys = useSelector(storeState => storeState.toyModule.toys)
-    const filterBy = useSelector(storeState => storeState.toyModule.filterBy)
+    const filterBy = useSelector(storeState => storeState.toyModule.filterBy) // default filter
     const isLoading = useSelector(storeState => storeState.toyModule.isLoading)
 
     useEffect(() => {
@@ -23,8 +23,8 @@ export function ToyIndex() {
             })
     }, [filterBy])
 
-    function onSetFilter(filterBy) {
-        setFilterBy(filterBy)
+    function onSetFilter(filterBy) { // new filter the user picked
+        setFilterBy(filterBy) // this function changes the filter
     }
 
     function onRemoveToy(toyId) {
@@ -39,6 +39,7 @@ export function ToyIndex() {
 
     function onAddToy() {
         const toyToSave = toyService.getRandomToy()
+        console.log('toyToSave', toyToSave)
         saveToy(toyToSave)
             .then((savedToy) => {
                 showSuccessMsg(`Toy added (id: ${savedToy._id})`)
@@ -61,29 +62,23 @@ export function ToyIndex() {
             })
     }
 
-    // function addToToy(toy) {
-    //     console.log(`Adding ${toy.name} to Toy`)
-    //     dispatch({ type: ADD_TOY_TO_TO, toy })
-    //     showSuccessMsg('Added to Toy')
-    // }
-
     return (
-        <div>
-            <h3>Toys App</h3>
+        <div className="toys-app">
+            <h3>🎮 Toys Store</h3>
             <main>
-                <Link to="/toy/edit">Add Toy</Link>
-                <button className='add-btn' onClick={onAddToy}>Add Random Toy ⛐</button>
+                <div className="app-controls">
+                    <Link to="/toy/edit" className="add-toy-btn">➕ Add New Toy</Link>
+                    <button className='random-toy-btn' onClick={onAddToy}>🎲 Add Random Toy</button>
+                </div>
                 <ToyFilter filterBy={filterBy} onSetFilter={onSetFilter} />
                 {!isLoading
                     ? <ToyList
                         toys={toys}
                         onRemoveToy={onRemoveToy}
                         onEditToy={onEditToy}
-                        // addToToy={addToToy}
                     />
-                    : <div>Loading...</div>
+                    : <div className="loading">🔄 Loading toys...</div>
                 }
-                <hr />
             </main>
         </div>
     )

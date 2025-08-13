@@ -1,18 +1,39 @@
 
-import { ToyPreview } from "./ToyPreview"
+import { ToyPreview } from "./ToyPreview.jsx"
 
 
 export function ToyList({ toys, onRemoveToy, onEditToy }) {
+    // ננקה את ה-localStorage כדי לטעון מחדש את הצעצועים עם התמונות החדשות
+    if (toys.length === 1) {
+        console.log('Clearing localStorage to reload toys with new images...')
+        localStorage.removeItem('toyDB')
+        window.location.reload()
+        return null
+    }
+
     return (
-        <ul className="toy-list">
-            {toys.map(toy =>
-                <li className="toy-preview" key={toy._id}>
-                    <ToyPreview toy={toy} />
-                    <div>
-                        <button onClick={() => onRemoveToy(toy._id)}>x</button>
-                        <button onClick={() => onEditToy(toy)}>Edit</button>
+        <div className="toy-grid">
+            {toys.map(toy => {
+                return (
+                    <div key={toy._id} className="toy-card">
+                        <ToyPreview toy={toy} />
+                        <div className="toy-actions">
+                            <button 
+                                onClick={() => onRemoveToy(toy._id)}
+                                className="btn btn-remove"
+                            >
+                                🗑️ Remove
+                            </button>
+                            <button 
+                                onClick={() => onEditToy(toy)}
+                                className="btn btn-edit"
+                            >
+                                ✏️ Edit
+                            </button>
+                        </div>
                     </div>
-                </li>)}
-        </ul>
+                )
+            })}
+        </div>
     )
 }
